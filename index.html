@@ -1,0 +1,243 @@
+﻿<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Personal Study Hub</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+</head>
+<body data-theme="ocean">
+  <div class="app-shell">
+    <aside class="sidebar glass-panel">
+      <div class="brand-block">
+        <div class="brand-mark" aria-hidden="true">PS</div>
+        <div><h1>Personal Study Hub</h1><p>Study dashboard</p></div>
+      </div>
+      <nav class="primary-nav" aria-label="Primary">
+        <button class="nav-btn active" data-view="schedule" type="button"><span class="nav-icon">S</span><span>Schedule</span></button>
+        <button class="nav-btn" data-view="english" type="button"><span class="nav-icon">E</span><span>English Learning</span></button>
+      </nav>
+      <section class="theme-box" aria-label="Theme">
+        <div class="sidebar-label">Color</div>
+        <div class="swatches">
+          <button class="swatch active" style="--swatch:#42a5f5" data-theme="ocean" type="button" aria-label="Ocean Blue"></button>
+          <button class="swatch" style="--swatch:#35d07f" data-theme="emerald" type="button" aria-label="Emerald Green"></button>
+          <button class="swatch" style="--swatch:#a78bfa" data-theme="lavender" type="button" aria-label="Lavender Purple"></button>
+          <button class="swatch" style="--swatch:#ff9f43" data-theme="sunset" type="button" aria-label="Sunset Orange"></button>
+          <button class="swatch" style="--swatch:#fb7185" data-theme="rose" type="button" aria-label="Rose Pink"></button>
+          <button class="swatch" style="--swatch:#22d3ee" data-theme="teal" type="button" aria-label="Teal Cyan"></button>
+        </div>
+      </section>
+      <label class="eye-toggle"><input id="eyeMode" type="checkbox" /><span>Eye Protection</span></label>
+    </aside>
+
+    <main class="main-stage">
+      <header class="topbar glass-panel">
+        <div><p class="eyebrow">Today</p><h2 id="todayLabel">Today</h2></div>
+        <div class="quick-stats"><div><strong id="tasksDone">0</strong><span>Done</span></div><div><strong id="wordsCount">0</strong><span>Words</span></div><div><strong id="studyHours">0.0h</strong><span>Study</span></div></div>
+      </header>
+
+      <section id="scheduleView" class="view active" aria-label="Schedule">
+        <div class="schedule-layout">
+          <section class="calendar-panel glass-panel">
+            <div class="panel-head"><div><p class="eyebrow">Calendar</p><h3 id="monthLabel">Month</h3></div>
+            
+            <div class="icon-row"><button class="icon-btn" id="prevMonth" type="button">‹</button><button class="icon-btn" id="todayBtn" type="button">•</button><button class="icon-btn" id="nextMonth" type="button">›</button></div></div>
+            
+            <div class="calendar-tools"><select id="monthSelect"></select><input id="yearInput" type="number" min="2020" max="2040" /></div>
+            <div class="weekdays"><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span></div>
+            <div id="calendarGrid" class="calendar-grid"></div>
+          </section>
+          <section class="day-panel glass-panel">
+            <div class="panel-head"><div><p class="eyebrow">Selected Day</p><h3 id="selectedDateLabel">Day</h3></div><button id="clearDoneBtn" class="ghost-btn" type="button">Clear Done</button></div>
+            <form id="plannerForm" class="compact-form"><input id="plannerInput" type="text" placeholder="Todo, homework, goal" required /><select id="plannerType"><option value="todo">Todo</option><option value="homework">Homework</option><option value="goal">Goal</option></select><button class="primary-btn" type="submit">Add</button></form>
+            <div id="plannerList" class="item-list"></div>
+          </section>
+        </div>
+
+        <div class="lower-grid">
+          <section class="glass-panel data-panel timetable-panel">
+            <div class="panel-head"><div><p class="eyebrow">Timetable</p><h3>School & Self Study</h3></div></div>
+            <form id="classForm" class="grid-form"><input id="subjectInput" type="text" placeholder="Subject" required /><input id="timeInput" type="time" required /><input id="placeInput" type="text" placeholder="Place" required /><input id="noteInput" type="text" placeholder="Note" /><button class="primary-btn" type="submit">Add</button></form>
+            <div id="classList" class="timeline-list"></div>
+            <div class="converter-box">
+
+  <div class="panel-head compact-head">
+    <div>
+      <p class="eyebrow">Automated Timetable Generator</p>
+      <h3>Input to Visual TKB</h3>
+    </div>
+
+    <div class="icon-row">
+      <button id="loadSampleCourses" class="ghost-btn" type="button">Sample</button>
+      <button id="exportTimetableHtml" class="ghost-btn" type="button">Export HTML</button>
+      <button id="saveEditedTimetable" class="primary-btn" type="button">💾 Lưu thay đổi</button>
+    </div>
+  </div>
+
+  <!-- 1. INPUT -->
+  <textarea id="courseRawInput" rows="7" spellcheck="false"
+    placeholder='Paste JSON or OCR lines'></textarea>
+
+  <div class="converter-actions">
+    <input id="courseNameHint" type="text" placeholder="Default subject for raw OCR lines" value="Mon hoc" />
+    <button id="generateTimetable" class="primary-btn" type="button">Generate TKB</button>
+  </div>
+
+  <!-- 2. EDITOR (Môn học / Thứ / Tiết...) -->
+  <div id="parsedCourses" class="parsed-courses"></div>
+
+  <!-- 3. FINAL RESULT (CUỐI CÙNG) -->
+  <div id="visualTimetable" class="visual-timetable"></div>
+
+</div>
+          </section>
+
+          <section class="glass-panel data-panel">
+            <div class="panel-head"><div><p class="eyebrow">Reminder</p><h3>Study Alerts</h3></div></div>
+            <form id="reminderForm" class="compact-form"><input id="reminderText" type="text" placeholder="Exam, deadline, lesson" required /><input id="reminderTime" type="datetime-local" required /><button class="primary-btn" type="submit">Add</button></form>
+            <div id="reminderList" class="item-list"></div>
+          </section>
+
+          <section class="glass-panel data-panel progress-panel"><div class="panel-head"><div><p class="eyebrow">Progress</p><h3>Weekly Study</h3></div></div><canvas id="progressChart" width="620" height="280"></canvas></section>
+        </div>
+      </section>
+
+      <section id="englishView" class="view" aria-label="English Learning">
+        <div class="learning-tabs glass-panel">
+          <button class="tab-btn active" data-tab="podcast" type="button">Podcast</button><button class="tab-btn" data-tab="hidden" type="button">Hidden Word</button><button class="tab-btn" data-tab="paragraph" type="button">Paragraph</button><button class="tab-btn" data-tab="player" type="button">Player</button><button class="tab-btn" data-tab="import" type="button">Import</button><button class="tab-btn" data-tab="ideas" type="button">Ideas</button><button class="tab-btn" data-tab="checker" type="button">Checker</button><button class="tab-btn" data-tab="review" type="button">Review</button></div>
+        
+          <div class="english-layout">
+          <section class="glass-panel vocab-panel"><div class="panel-head"><div><p class="eyebrow">Vocabulary</p><h3>Word Bank</h3></div><button id="seedWordsBtn" class="ghost-btn" type="button">Reset</button></div><form id="vocabForm" class="grid-form vocab-form"><input id="wordInput" type="text" placeholder="Word" required /><input id="meaningInput" type="text" placeholder="Meaning" required /><input id="pronInput" type="text" placeholder="Pronunciation" /><input id="exampleInput" type="text" placeholder="Example" required /><button class="primary-btn" type="submit">Add</button></form><div id="vocabList" class="vocab-list"></div></section>
+          <section class="glass-panel mode-panel">
+            <div id="podcastTab" class="tab-panel active"><div class="panel-head"><div><p class="eyebrow">Podcast Learning</p><h3>Daily Listening</h3></div></div>
+
+            <div class="dict-module">
+
+                <!-- INPUT ROW -->
+                <div class="dict-row">
+                  
+                  <button id="speakDictWord" class="voice-btn" type="button" title="Speak word">🔊</button>
+                  <label for="dictionarySearch" class="sr-only">Dictionary search</label>
+                  <input id="dictionarySearch" placeholder="Tra từ tại đây ......" />
+
+                  <button id="searchDictionary" type="button">Tra Từ</button>
+                </div>
+
+                <!-- WAVEFORM -->
+                <div class="wave-line">
+
+                    <div class="audio-bars" id="dictBars" aria-label="audio waveform">
+                      <span></span><span></span><span></span><span></span>
+                    </div>
+
+                </div>
+
+                <!-- RESULT -->
+                <div id="dictionaryResult"></div>
+
+              </div>        
+              
+              <div class="podcast-track">
+
+                <div class="audio-bars" id="audioBars">
+                  <span></span><span></span><span></span><span></span><span></span>
+                </div>
+
+                <div class="track-info">
+                  <strong>Campus Routine</strong>
+                  <span>02:45</span>
+                </div>
+
+              </div>
+  
+                <div class="transcript-grid"><p>You should regularly review vocabulary before class because it helps you apply it to the lesson more quickly.</p><p>Bạn thường xuyên ôn lại từ vựng trước giờ học vì điều đó giúp bạn vận dụng vào bài nhanh hơn.</p></div></div>
+            
+              <div id="hiddenTab" class="tab-panel"><div class="panel-head"><div><p class="eyebrow">Hidden Word</p><h3>Fill The Blank</h3></div></div><p id="hiddenSentence" class="practice-line"></p><form id="hiddenForm" class="compact-form"><input id="hiddenAnswer" type="text" placeholder="Answer" required /><button class="primary-btn" type="submit">Check</button></form><div id="hiddenResult" class="result-box"></div></div>
+            
+            <div id="paragraphTab" class="tab-panel"><div class="panel-head">
+              
+              <div><p class="eyebrow">Paragraph Practice</p>
+                
+                <div class="paragraph-box">
+                  <h3>Paragraph Practice</h3>
+
+                  <textarea id="paragraphInput" placeholder="Nhập đoạn văn của bạn..."></textarea>
+
+                  <div class="paragraph-actions">
+                    <button id="analyzeParagraph">Check</button>
+                  </div>
+
+                  <div id="paragraphStats"></div>
+                  <div id="paragraphErrors"></div>
+                  <div id="paragraphFeedback"></div>
+                </div>
+              
+              </div>
+            
+            </div><button id="makeParagraph" class="primary-btn" type="button">Generate</button><div id="paragraphOutput" class="result-box tall"></div></div>
+
+            <div id="playerTab" class="tab-panel"><div class="panel-head"><div><p class="eyebrow">Auto Vocabulary Player</p><h3>Focus Card</h3></div></div><div id="playerCard" class="player-card flip-card">
+  <div class="flip-inner" id="flipInner"></div>
+</div><div class="icon-row wide"><button id="prevWord" class="icon-btn" type="button">‹</button>
+              
+              <button id="speakWord">🔊 Speak</button>            
+            <button id="nextWord" class="icon-btn" type="button">›</button></div></div>
+            <div id="importTab" class="tab-panel"><div class="panel-head"><div><p class="eyebrow">Smart Import</p><h3>Text, Image, DOCX, PDF</h3></div></div><textarea id="importText" rows="8" placeholder="Paste text or OCR result"></textarea><div class="file-row"><input id="fileInput" type="file" accept=".txt,.pdf,.docx,.png,.jpg,.jpeg" /><button id="detectWords" class="primary-btn" type="button">Detect</button></div><div id="detectOutput" class="result-box tall"></div></div>
+            <div id="ideasTab" class="tab-panel"><div class="panel-head"><div><p class="eyebrow">Writing Ideas</p><h3>Topic Builder</h3></div></div><div id="topicChips" class="chips"></div><div id="ideaOutput" class="result-box tall"></div></div>
+            <div id="checkerTab" class="tab-panel">
+
+  <div class="panel-head">
+    <div>
+      <p class="eyebrow">AI Writing Checker</p>
+      <h3>Grammar & Spelling</h3>
+    </div>
+  </div>
+
+  <textarea
+    id="writingInput"
+    rows="8"
+    placeholder="Write your paragraph">
+  </textarea>
+
+  <button
+    id="checkWriting"
+    class="primary-btn"
+    type="button">
+    Check
+  </button>
+
+      <!-- Bảng từ mới -->
+<div id="newWordsContainer"></div>
+
+<button
+  id="addAllVocabulary"
+  class="primary-btn"
+  type="button"
+  style="display:none;margin-top:10px;">
+  Add All To Vocabulary
+</button>
+
+<!-- Nhận xét tiếng Việt -->
+<div id="checkerOutput"
+     class="result-box tall">
+</div>
+  
+</div>
+            <div id="reviewTab" class="tab-panel"><div class="panel-head"><div><p class="eyebrow">Vocabulary Review</p><h3>Spaced Review</h3></div></div><div id="reviewGrid" class="review-grid"></div></div>
+
+
+
+          </section>
+        </div>
+      </section>
+    </main>
+  </div>
+  <script src="app.js"></script>
+</body>
+</html>
+
+
+
